@@ -54,8 +54,7 @@ class AnyCableBroadcasterTest extends TestCase
     {
         $broadcaster = new AnyCableBroadcaster($this->mockHttpClient, $this->config);
 
-        $request = new Request;
-        $request->channel_name = 'private-channel';
+        $request = new Request(['channel_name' => 'private-channel']);
 
         $result = $broadcaster->validAuthenticationResponse($request, 'user-auth-data');
 
@@ -81,8 +80,7 @@ class AnyCableBroadcasterTest extends TestCase
     {
         $broadcaster = new AnyCableBroadcaster($this->mockHttpClient, $this->config);
 
-        $request = new Request;
-        $request->channel_name = 'public-channel';
+        $request = new Request(['channel_name' => 'public-channel']);
 
         $result = $broadcaster->validAuthenticationResponse($request, 'user-auth-data');
 
@@ -99,8 +97,7 @@ class AnyCableBroadcasterTest extends TestCase
 
         $broadcaster = new AnyCableBroadcaster($this->mockHttpClient, $configWithoutSecret);
 
-        $request = new Request;
-        $request->channel_name = 'private-channel';
+        $request = new Request(['channel_name' => 'private-channel']);
 
         $result = $broadcaster->validAuthenticationResponse($request, 'user-auth-data');
 

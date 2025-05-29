@@ -2,10 +2,8 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-// Set up a simple error handler for tests
-set_error_handler(function ($severity, $message, $file, $line) {
-    throw new \ErrorException($message, 0, $severity, $file, $line);
-});
+// We'll register the error handler in TestCase.php instead
+// This allows PHPUnit to properly detect when tests modify error handlers
 
 // Mock Laravel's Log facade if needed
 if (! class_exists('Illuminate\Support\Facades\Log')) {

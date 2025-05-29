@@ -8,6 +8,39 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
     /**
+     * The previous error handler.
+     *
+     * @var callable|null
+     */
+    protected $previousErrorHandler;
+
+    /**
+     * Setup the test environment.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Store the current error handler so we can restore it later
+        $this->previousErrorHandler = set_error_handler(function ($severity, $message, $file, $line) {
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        });
+    }
+
+    /**
+     * Clean up the testing environment before the next test.
+     */
+    protected function tearDown(): void
+    {
+        // Restore the previous error handler if it exists
+        if ($this->previousErrorHandler) {
+            restore_error_handler();
+        }
+
+        parent::tearDown();
+    }
+
+    /**
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app

@@ -12,6 +12,11 @@ The broadcaster allows you to use AnyCable as a drop-in replacement for Reverb, 
 > [!NOTE]
 > The AnyCable Laravel support is still in its early days. Please, let us know if anything goes wrong. See also the [limitations](#limitations) section below.
 
+## Requirements
+
+- PHP 8.2+
+- Laravel 11+
+
 ## Installation
 
 You can install the package via composer:
@@ -121,7 +126,11 @@ Broadcast::channel('private-channel', function ($user) {
 
 ## Limitations
 
-TBD
+- Presence channels are not supported yet.
+
+- Only HTTP broadcasting adapter for AnyCable is supported for now.
+
+- Pusher's signing functionality is not supported by AnyCable yet (is it used by Laravel at all?).
 
 ## License
 
