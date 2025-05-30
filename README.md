@@ -4,13 +4,13 @@
 
 A Laravel broadcaster implementation to use [AnyCable](https://anycable.io/) as a WebSocket server.
 
-The broadcaster allows you to use AnyCable as a drop-in replacement for Reverb, or Reverb, or whatever is supported by Laravel Echo. By "drop-in", we mean that no client-side changes required to use AnyCable, all you need is to update the server configuration (and, well, launch an AnyCable server).
+The broadcaster allows you to use AnyCable as a drop-in replacement for Reverb, or Pusher, or whatever is supported by Laravel Echo. By "drop-in", we mean that no client-side changes required to use AnyCable, all you need is to update the server configuration (and, well, launch an AnyCable server).
 
 > [!TIP]
 > The quickest way to get started with AnyCable server is to use our free managed offering: [plus.anycable.io](https://plus.anycable.io)
 
 > [!NOTE]
-> The AnyCable Laravel support is still in its early days. Please, let us know if anything goes wrong. See also the [limitations](#limitations) section below.
+> AnyCable Laravel support is still in its early days. Please, let us know if anything goes wrong. See also the [limitations](#limitations) section below.
 
 ## Requirements
 
@@ -134,6 +134,12 @@ php artisan anycable:server --download-dir=/path/to/directory
 ```
 
 The command will detect your platform and architecture automatically and download the appropriate binary from the AnyCable GitHub releases. The default download path is `storage/dist`, so make sure it's Git-ignored.
+
+You can also pass AnyCable flags as follows:
+
+```sh
+php artisan anycable:server -- --public_streams --pusher_app_key=my-app-key
+```
 
 ### Private Channels
 

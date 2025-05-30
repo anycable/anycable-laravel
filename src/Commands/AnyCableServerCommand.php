@@ -19,7 +19,8 @@ class AnyCableServerCommand extends Command
                             {--binary-path= : Path to the anycable-go binary}
                             {--anycable-version=latest : Version of anycable-go to download if not present}
                             {--download-dir= : Directory to download the binary to}
-                            {--download-only : Only download the binary without running it}';
+                            {--download-only : Only download the binary without running it}
+                            {args?* : Arguments to pass to the anycable-go binary}';
 
     /**
      * The console command description.
@@ -45,6 +46,11 @@ class AnyCableServerCommand extends Command
             $this->info('anycable-go binary downloaded to: '.$binaryPath);
 
             return 0;
+        }
+
+        // Display a help message about args usage
+        if ($this->argument('args') && count($this->argument('args')) > 0) {
+            $this->info('Passing additional arguments to anycable-go binary: '.implode(' ', $this->argument('args')));
         }
 
         // Run the binary
@@ -194,7 +200,15 @@ class AnyCableServerCommand extends Command
     {
         $this->info('Starting anycable-go server...');
 
-        $process = new Process([$binaryPath]);
+        // Get arguments passed to the command
+        $args = [$binaryPath];
+        $extraArgs = $this->argument('args');
+
+        if (! empty($extraArgs)) {
+            $args = array_merge($args, $extraArgs);
+        }
+
+        $process = new Process($args);
         $process->setTimeout(null);
         $process->setTty(Process::isTtySupported());
 
