@@ -3,6 +3,7 @@
 namespace AnyCable\Laravel\Providers;
 
 use AnyCable\Laravel\Broadcasting\AnyCableBroadcaster;
+use AnyCable\Laravel\Commands\AnyCableServerCommand;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
@@ -34,5 +35,11 @@ class AnyCableBroadcastServiceProvider extends ServiceProvider
                 $config
             );
         });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                AnyCableServerCommand::class,
+            ]);
+        }
     }
 }

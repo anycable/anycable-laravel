@@ -112,6 +112,29 @@ MyEvent::dispatch($data);
 
 See [Broadcasting documentation](https://laravel.com/docs/12.x/broadcasting).
 
+### AnyCable server management
+
+This package includes a command to manage the AnyCable server binary. The command will automatically download the binary if it's not found in the specified path:
+
+```bash
+# Run AnyCable server, downloading the binary if necessary
+php artisan anycable:server
+
+# Download the binary without running the server
+php artisan anycable:server --download-only
+
+# Specify a custom path for the binary
+php artisan anycable:server --binary-path=/path/to/anycable-go
+
+# Specify a custom version to download
+php artisan anycable:server --version=1.6.3
+
+# Specify download directory
+php artisan anycable:server --download-dir=/path/to/directory
+```
+
+The command will detect your platform and architecture automatically and download the appropriate binary from the AnyCable GitHub releases. The default download path is `storage/dist`, so make sure it's Git-ignored.
+
 ### Private Channels
 
 AnyCable supports private channels. To use them, you need to set the `ANYCABLE_SECRET` environment variable.
@@ -131,6 +154,21 @@ Broadcast::channel('private-channel', function ($user) {
 - Only HTTP broadcasting adapter for AnyCable is supported for now.
 
 - Pusher's signing functionality is not supported by AnyCable yet (is it used by Laravel at all?).
+
+## Contributing
+
+Contributions are welcomed! All you need to start developing the project locally is PHP 8.2+, Composer and:
+
+```sh
+# install deps
+composer install
+
+# run tests
+composer test
+
+# run linters
+composer lint
+```
 
 ## License
 
