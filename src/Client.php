@@ -44,8 +44,8 @@ class Client
             $this->broadcastKey = hash_hmac('sha256', 'broadcast-cable', $config['secret']);
         }
 
-        if (isset($config['broadcast_url'])) {
-            $this->broadcastUrl = $config['broadcast_url'];
+        if (isset($config['http_broadcast_url'])) {
+            $this->broadcastUrl = $config['http_broadcast_url'];
         } else {
             // Make sure the defaults match the AnyCable server's defaults
             if (empty($this->broadcastKey)) {

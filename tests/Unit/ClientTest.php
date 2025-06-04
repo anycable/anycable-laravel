@@ -16,7 +16,7 @@ class ClientTest extends TestCase
 {
     protected array $config = [
         'secret' => 'testing_secret',
-        'broadcast_url' => 'http://localhost:8090/_broadcast',
+        'http_broadcast_url' => 'http://localhost:8090/_broadcast',
     ];
 
     protected array $container = [];
