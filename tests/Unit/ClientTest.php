@@ -42,7 +42,7 @@ class ClientTest extends TestCase
         $client = new Client($this->config);
         $streamName = 'private-channel';
 
-        $signed = $client->sign_stream($streamName);
+        $signed = $client->signStream($streamName);
 
         // Should be a base64 encoded string followed by -- and a digest
         $this->assertStringContainsString('--', $signed);
@@ -68,7 +68,7 @@ class ClientTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('AnyCable secret is not configured');
 
-        $client->sign_stream('private-channel');
+        $client->signStream('private-channel');
     }
 
     public function test_broadcast()
@@ -100,7 +100,7 @@ class ClientTest extends TestCase
 
         // Check bearer token is set with correct value
         $expectedToken = hash_hmac('sha256', 'broadcast-cable', 'testing_secret');
-        $this->assertEquals('Bearer '.$expectedToken, $request->getHeaderLine('Authorization'));
+        $this->assertEquals('Bearer ' . $expectedToken, $request->getHeaderLine('Authorization'));
 
         // Check payload
         $payload = json_decode($this->container[0]['request']->getBody(), true);
@@ -114,7 +114,7 @@ class ClientTest extends TestCase
         $this->mockHandler->append(new Response(200, [], '{"status":"ok"}'));
 
         $client = new Client($this->config, $this->mockHttpClient);
-        $result = $client->broadcast_event('test-channel', 'test-event', ['foo' => 'bar']);
+        $result = $client->broadcastEvent('test-channel', 'test-event', ['foo' => 'bar']);
 
         // Verify response
         $this->assertTrue($result['success']);
@@ -141,7 +141,7 @@ class ClientTest extends TestCase
         );
 
         $client = new Client($this->config, $this->mockHttpClient);
-        $result = $client->broadcast_to_many(
+        $result = $client->broadcastToMany(
             ['channel-1', 'channel-2'],
             ['foo' => 'bar']
         );
@@ -230,7 +230,7 @@ class ClientTest extends TestCase
         ];
 
         $client = new Client($customConfig);
-        $signed = $client->sign_stream('private-channel');
+        $signed = $client->signStream('private-channel');
 
         // Verify signed string contains the correct signature
         [$encoded, $digest] = explode('--', $signed);
