@@ -38,19 +38,19 @@ class AnyCableServerCommand extends Command
 
         // If binary doesn't exist, download it
         if (! File::exists($binaryPath)) {
-            $this->info('anycable-go binary not found at: ' . $binaryPath);
+            $this->info('anycable-go binary not found at: '.$binaryPath);
             $binaryPath = $this->downloadBinary();
         }
 
         if ($this->option('download-only')) {
-            $this->info('anycable-go binary downloaded to: ' . $binaryPath);
+            $this->info('anycable-go binary downloaded to: '.$binaryPath);
 
             return 0;
         }
 
         // Display a help message about args usage
         if ($this->argument('args') && count($this->argument('args')) > 0) {
-            $this->info('Passing additional arguments to anycable-go binary: ' . implode(' ', $this->argument('args')));
+            $this->info('Passing additional arguments to anycable-go binary: '.implode(' ', $this->argument('args')));
         }
 
         // Run the binary
@@ -76,7 +76,7 @@ class AnyCableServerCommand extends Command
             $suffix = '.exe';
         }
 
-        return $downloadDir . DIRECTORY_SEPARATOR . 'anycable-go' . $suffix;
+        return $downloadDir.DIRECTORY_SEPARATOR.'anycable-go'.$suffix;
     }
 
     /**
@@ -128,11 +128,11 @@ class AnyCableServerCommand extends Command
         $response = Http::get($downloadUrl);
 
         if ($response->failed()) {
-            throw new RuntimeException("Failed to download anycable-go binary from {$downloadUrl}. HTTP status: " . $response->status());
+            throw new RuntimeException("Failed to download anycable-go binary from {$downloadUrl}. HTTP status: ".$response->status());
         }
 
         $downloadDir = $this->getDownloadDir();
-        $binaryPath = $downloadDir . DIRECTORY_SEPARATOR . 'anycable-go' . $suffix;
+        $binaryPath = $downloadDir.DIRECTORY_SEPARATOR.'anycable-go'.$suffix;
 
         File::put($binaryPath, $response->body());
         chmod($binaryPath, 0755); // Make binary executable
@@ -219,7 +219,7 @@ class AnyCableServerCommand extends Command
         });
 
         if (! $process->isSuccessful()) {
-            throw new RuntimeException('anycable-go process failed: ' . $process->getErrorOutput());
+            throw new RuntimeException('anycable-go process failed: '.$process->getErrorOutput());
         }
     }
 }

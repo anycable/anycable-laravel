@@ -100,7 +100,7 @@ class ClientTest extends TestCase
 
         // Check bearer token is set with correct value
         $expectedToken = hash_hmac('sha256', 'broadcast-cable', 'testing_secret');
-        $this->assertEquals('Bearer ' . $expectedToken, $request->getHeaderLine('Authorization'));
+        $this->assertEquals('Bearer '.$expectedToken, $request->getHeaderLine('Authorization'));
 
         // Check payload
         $payload = json_decode($this->container[0]['request']->getBody(), true);

@@ -66,7 +66,7 @@ class Client
         $encoded = base64_encode(json_encode($streamName));
         $digest = hash_hmac('sha256', $encoded, $this->streamsKey);
 
-        return $encoded . '--' . $digest;
+        return $encoded.'--'.$digest;
     }
 
     /**
@@ -107,7 +107,7 @@ class Client
                 ];
             }
 
-            throw new Exception('Failed to broadcast to AnyCable: ' . $e->getMessage(), 0, $e);
+            throw new Exception('Failed to broadcast to AnyCable: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -149,7 +149,7 @@ class Client
         ];
 
         if (! empty($this->broadcastKey)) {
-            $headers['Authorization'] = 'Bearer ' . $this->broadcastKey;
+            $headers['Authorization'] = 'Bearer '.$this->broadcastKey;
         }
 
         return $headers;

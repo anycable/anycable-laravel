@@ -72,7 +72,7 @@ class AnyCableBroadcaster extends PusherBroadcaster
                 'error' => $e->getMessage(),
             ]);
 
-            throw new BroadcastException('Failed to broadcast to AnyCable: ' . $e->getMessage());
+            throw new BroadcastException('Failed to broadcast to AnyCable: '.$e->getMessage());
         }
     }
 }
