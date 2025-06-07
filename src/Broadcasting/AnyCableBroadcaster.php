@@ -39,7 +39,7 @@ class AnyCableBroadcaster extends PusherBroadcaster
     public function validAuthenticationResponse($request, $result)
     {
         if (str_starts_with($request->channel_name, 'private') && isset($this->config['secret']) && $this->config['secret']) {
-            $signed_stream_name = $this->client->sign_stream($request->channel_name);
+            $signed_stream_name = $this->client->signStream($request->channel_name);
 
             return ['auth' => $signed_stream_name];
         }
@@ -54,7 +54,7 @@ class AnyCableBroadcaster extends PusherBroadcaster
     {
         try {
             foreach ($channels as $channel) {
-                $result = $this->client->broadcast_event($channel, $event, $payload);
+                $result = $this->client->broadcastEvent($channel, $event, $payload);
 
                 if (! $result['success']) {
                     Log::error('AnyCable broadcast failed', [
@@ -72,7 +72,7 @@ class AnyCableBroadcaster extends PusherBroadcaster
                 'error' => $e->getMessage(),
             ]);
 
-            throw new BroadcastException('Failed to broadcast to AnyCable: '.$e->getMessage());
+            throw new BroadcastException('Failed to broadcast to AnyCable: ' . $e->getMessage());
         }
     }
 }
