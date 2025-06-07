@@ -76,7 +76,7 @@ class AnyCableServerCommand extends Command
             $suffix = '.exe';
         }
 
-        return $downloadDir.DIRECTORY_SEPARATOR.'anycable-go';
+        return $downloadDir.DIRECTORY_SEPARATOR.'anycable-go'.$suffix;
     }
 
     /**

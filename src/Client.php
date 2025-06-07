@@ -44,22 +44,20 @@ class Client
             $this->broadcastKey = hash_hmac('sha256', 'broadcast-cable', $config['secret']);
         }
 
+        // Make sure the defaults match the AnyCable server's defaults
         if (isset($config['http_broadcast_url'])) {
             $this->broadcastUrl = $config['http_broadcast_url'];
+        } elseif (empty($this->broadcastKey)) {
+            $this->broadcastUrl = 'http://localhost:8090/_broadcast';
         } else {
-            // Make sure the defaults match the AnyCable server's defaults
-            if (empty($this->broadcastKey)) {
-                $this->broadcastUrl = 'http://localhost:8090/_broadcast';
-            } else {
-                $this->broadcastUrl = 'http://localhost:8080/_broadcast';
-            }
+            $this->broadcastUrl = 'http://localhost:8080/_broadcast';
         }
     }
 
     /**
      * Sign a stream name for authentication.
      */
-    public function sign_stream(string $streamName): string
+    public function signStream(string $streamName): string
     {
         if (empty($this->streamsKey)) {
             throw new Exception('AnyCable secret is not configured');
@@ -108,17 +106,15 @@ class Client
                     'response' => $e->getResponse()->getBody()->getContents(),
                 ];
             }
-            $errorMessage = $e instanceof \GuzzleHttp\Exception\ConnectException
-                ? 'Failed to broadcast to AnyCable: '.$e->getMessage()
-                : 'Failed to broadcast to AnyCable: '.$e->getMessage();
-            throw new Exception($errorMessage, 0, $e);
+
+            throw new Exception('Failed to broadcast to AnyCable: '.$e->getMessage(), 0, $e);
         }
     }
 
     /**
      * Broadcast an event with data to a specific stream.
      */
-    public function broadcast_event(string $stream, string $event, array $payload = [], array $options = []): array
+    public function broadcastEvent(string $stream, string $event, array $payload = [], array $options = []): array
     {
         $data = [
             'event' => $event,
@@ -131,7 +127,7 @@ class Client
     /**
      * Broadcast to multiple streams at once.
      */
-    public function broadcast_to_many(array $streams, array $data, array $options = []): array
+    public function broadcastToMany(array $streams, array $data, array $options = []): array
     {
         $results = [];
 

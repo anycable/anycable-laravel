@@ -149,12 +149,12 @@ class AnyCableBroadcasterTest extends TestCase
         $mockClient = Mockery::mock(AnyCableClient::class);
 
         // Mock the client to return one success and one failure
-        $mockClient->shouldReceive('broadcast_event')
+        $mockClient->shouldReceive('broadcastEvent')
             ->once()
             ->with('channel-1', 'test-event', ['foo' => 'bar'])
             ->andReturn(['success' => true, 'status' => 200, 'response' => '{"status":"ok"}']);
 
-        $mockClient->shouldReceive('broadcast_event')
+        $mockClient->shouldReceive('broadcastEvent')
             ->once()
             ->with('channel-2', 'test-event', ['foo' => 'bar'])
             ->andReturn(['success' => false, 'status' => 400, 'response' => '{"error":"Bad request"}']);
@@ -209,7 +209,7 @@ class AnyCableBroadcasterTest extends TestCase
 
         // Mock client to throw exception
         $mockClient = Mockery::mock(AnyCableClient::class);
-        $mockClient->shouldReceive('broadcast_event')
+        $mockClient->shouldReceive('broadcastEvent')
             ->once()
             ->andThrow(new \Exception('Failed to broadcast to AnyCable: Connection refused'));
 
