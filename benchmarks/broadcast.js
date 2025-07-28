@@ -47,7 +47,7 @@ const cfg = {
     lifeMs: parseInt(env('LIFE_MS','45000'),10),
 
     wsUrl: env('WS_URL',
-        `ws://localhost:${ env('WS_PORT', '6001')}/app/${env('PUSHER_KEY','app-key')}`
+        `ws://localhost:${ env('WS_PORT', '8080')}/app/${env('PUSHER_KEY','app-key')}`
         + '?protocol=7&client=k6&version=0.1'),
     debug: __ENV.DEBUG === '1',
 };
@@ -142,11 +142,7 @@ export default function () {
 
                 case 'pusher:connection_established': {
                     connTrend.add(Date.now() - tConnectStart);
-                    // sometimes we can get either an object or a string
-                    let connData = msg.data;
-                    if (typeof connData === 'string') {
-                        connData = JSON.parse(connData);
-                    }
+                    let connData = JSON.parse(msg.data);
                     const { socket_id } = connData;
 
                     const sig = crypto.hmac('sha256', cfg.secret, `${socket_id}:${cfg.channel}`,'hex');
@@ -196,11 +192,7 @@ export default function () {
                 // every client receives other broadcasts, but not own
                 case 'client-broadcast': {
                     recvCnt.add(1);
-                    // sometimes we can get either an object or a string
                     let broadData = msg.data;
-                    if (typeof broadData === 'string') {
-                        broadData = JSON.parse(broadData);
-                    }
                     if (broadData.ts) broadTrend.add(Date.now() - Number(broadData.ts));
                     break;
                 }
