@@ -135,12 +135,20 @@ export default function () {
             switch(msg.event){
                 // keep‑alive
                 case 'pusher:ping':
-                    ws.send(JSON.stringify({ event:'pusher:pong' }));
+                    if (ws.readyState === WS_OPEN) {
+                        ws.send(JSON.stringify({ event:'pusher:pong' }));
+                    }
                     break;
 
                 case 'pusher:connection_established': {
                     connTrend.add(Date.now() - tConnectStart);
-                    const { socket_id } = JSON.parse(msg.data);
+                    // sometimes we can get either an object or a string
+                    let connData = msg.data;
+                    if (typeof connData === 'string') {
+                        connData = JSON.parse(connData);
+                    }
+                    const { socket_id } = connData;
+
                     const sig = crypto.hmac('sha256', cfg.secret, `${socket_id}:${cfg.channel}`,'hex');
                     subStart = Date.now();
                     ws.send(
@@ -173,7 +181,7 @@ export default function () {
                                 ws.send(JSON.stringify({
                                     event: 'client-broadcast',
                                     channel: cfg.channel,
-                                    data: JSON.stringify(payload),
+                                    data: payload,
                                 }));
 
                                 sentCnt.add(1);
@@ -188,14 +196,21 @@ export default function () {
                 // every client receives other broadcasts, but not own
                 case 'client-broadcast': {
                     recvCnt.add(1);
-                    const d = JSON.parse(msg.data);
-                    if (d.ts) broadTrend.add(Date.now() - Number(d.ts));
+                    // sometimes we can get either an object or a string
+                    let broadData = msg.data;
+                    if (typeof broadData === 'string') {
+                        broadData = JSON.parse(broadData);
+                    }
+                    if (broadData.ts) broadTrend.add(Date.now() - Number(broadData.ts));
                     break;
                 }
 
                 case 'pusher:error':
                     log('error',`pusher error ${msg.data.code}: ${msg.data.message}`);
                     break;
+
+                default:
+                    if (cfg.debug) console.log(`Unhandled event: ${msg.event}`);
             }
         });
 
@@ -208,5 +223,3 @@ export default function () {
         setTimeout(() => {}, randomIntBetween(80,160));
     });
 }
-
-// k6 run -e MAX_VUS=100 -e TIME=80 pusher.js
