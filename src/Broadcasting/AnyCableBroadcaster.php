@@ -38,10 +38,20 @@ class AnyCableBroadcaster extends PusherBroadcaster
      */
     public function validAuthenticationResponse($request, $result)
     {
-        if (str_starts_with($request->channel_name, 'private') && isset($this->config['secret']) && $this->config['secret']) {
+        if ((str_starts_with($request->channel_name, 'private-') || str_starts_with($request->channel_name, 'presence-')) && isset($this->config['secret']) && $this->config['secret']) {
             $signed_stream_name = $this->client->signStream($request->channel_name);
 
-            return ['auth' => $signed_stream_name];
+            if (str_starts_with($request->channel_name, 'presence-')) {
+                $user = $this->retrieveUser($request, $request->channel_name);
+
+                $broadcastIdentifier = method_exists($user, 'getAuthIdentifierForBroadcasting')
+                    ? $user->getAuthIdentifierForBroadcasting()
+                    : $user->getAuthIdentifier();
+
+                return ['signed_stream_name' => $signed_stream_name, 'presence' => array_merge(['id' => $broadcastIdentifier], $result)];
+            }
+
+            return ['signed_stream_name' => $signed_stream_name];
         }
 
         return [];
@@ -56,7 +66,7 @@ class AnyCableBroadcaster extends PusherBroadcaster
             foreach ($channels as $channel) {
                 $result = $this->client->broadcastEvent($channel, $event, $payload);
 
-                if (! $result['success']) {
+                if ($result['status'] != 201) {
                     Log::error('AnyCable broadcast failed', [
                         'channel' => $channel,
                         'event' => $event,

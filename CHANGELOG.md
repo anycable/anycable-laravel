@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.2.0
+
+- Refactor broadcaster to work with AnyCable Echo adapter (Reverb-compatible Echo adapters don't require a custom broadcaster anymore).
+
 ## 0.1.2
 
 - Use Reverb env vars as defaults in `anycable:server`.

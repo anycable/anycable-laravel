@@ -59,20 +59,16 @@ class AnyCableBroadcasterTest extends TestCase
         $result = $broadcaster->validAuthenticationResponse($request, 'user-auth-data');
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('auth', $result);
+        $this->assertArrayHasKey('signed_stream_name', $result);
 
-        // Verify the auth signature is correctly formatted
-        $auth = $result['auth'];
-        $this->assertStringContainsString('--', $auth);
+        $signedName = $result['signed_stream_name'];
+        $this->assertStringContainsString('--', $signedName);
 
-        // Split and verify the signature
-        [$encoded, $digest] = explode('--', $auth);
+        [$encoded, $digest] = explode('--', $signedName);
 
-        // Verify encoded is valid base64
         $decoded = base64_decode($encoded, true);
         $this->assertNotFalse($decoded);
 
-        // Verify decoded is the original channel name
         $this->assertEquals('private-channel', json_decode($decoded));
     }
 

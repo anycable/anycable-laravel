@@ -212,28 +212,33 @@ class AnyCableServerCommand extends Command
         $env = $_ENV;
 
         // Set ANYCABLE_BROADCAST_ADAPTER=http if not set
-        if (!isset($env['ANYCABLE_BROADCAST_ADAPTER'])) {
+        if (! isset($env['ANYCABLE_BROADCAST_ADAPTER'])) {
             $env['ANYCABLE_BROADCAST_ADAPTER'] = 'http';
         }
 
         // Set ANYCABLE_PUSHER_APP_ID to REVERB_APP_ID if not set and the latter exists
-        if (!isset($env['ANYCABLE_PUSHER_APP_ID']) && isset($env['REVERB_APP_ID'])) {
+        if (! isset($env['ANYCABLE_PUSHER_APP_ID']) && isset($env['REVERB_APP_ID'])) {
             $env['ANYCABLE_PUSHER_APP_ID'] = $env['REVERB_APP_ID'];
         }
 
         // Set ANYCABLE_PUSHER_APP_KEY to REVERB_APP_KEY if not set and the latter exists
-        if (!isset($env['ANYCABLE_PUSHER_APP_KEY']) && isset($env['REVERB_APP_KEY'])) {
+        if (! isset($env['ANYCABLE_PUSHER_APP_KEY']) && isset($env['REVERB_APP_KEY'])) {
             $env['ANYCABLE_PUSHER_APP_KEY'] = $env['REVERB_APP_KEY'];
         }
 
         // Set ANYCABLE_PUSHER_SECRET to REVERB_APP_SECRET if not set and the latter exists
-        if (!isset($env['ANYCABLE_PUSHER_SECRET']) && isset($env['REVERB_APP_SECRET'])) {
+        if (! isset($env['ANYCABLE_PUSHER_SECRET']) && isset($env['REVERB_APP_SECRET'])) {
             $env['ANYCABLE_PUSHER_SECRET'] = $env['REVERB_APP_SECRET'];
         }
 
         // Set ANYCABLE_PRESETS to broker if not set
-        if (!isset($env['ANYCABLE_PRESETS'])) {
+        if (! isset($env['ANYCABLE_PRESETS'])) {
             $env['ANYCABLE_PRESETS'] = 'broker';
+        }
+
+        // Enable whispering by default
+        if (! isset($env['ANYCABLE_STREAMS_WHISPER'])) {
+            $env['ANYCABLE_STREAMS_WHISPER'] = 'true';
         }
 
         $process = new Process($args, null, $env);

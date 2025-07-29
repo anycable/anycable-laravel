@@ -2,15 +2,10 @@
 
 # AnyCable Laravel Broadcaster
 
-A Laravel broadcaster implementation to use [AnyCable](https://anycable.io/) as a WebSocket server.
-
-The broadcaster allows you to use AnyCable as a drop-in replacement for Reverb, or Pusher, or whatever is supported by Laravel Echo. By "drop-in", we mean that no client-side changes required to use AnyCable, all you need is to update the server configuration (and, well, launch an AnyCable server).
+A Laravel broadcaster implementation to use [AnyCable](https://anycable.io/) as a WebSocket server with Laravel Echo clients. For client-side integration, see [@anycable/echo][] package.
 
 > [!TIP]
 > The quickest way to get started with AnyCable server is to use our free managed offering: [plus.anycable.io](https://plus.anycable.io)
-
-> [!NOTE]
-> AnyCable Laravel support is still in its early days. Please, let us know if anything goes wrong. See also the [limitations](#limitations) section below.
 
 ## Requirements
 
@@ -57,49 +52,20 @@ That's a minimal configuration, all AnyCable related parameters would be inferre
 ]
 ```
 
-Your client-side Echo configuration can stay almost unchanged (in case you used Reverb):
+On the client-side, configure Echo to use AnyCable adapter:
 
 ```js
 import Echo from "laravel-echo";
+import { EchoCable } from "@anycable/echo";
 
-// We use Pusher protocol for now
-import Pusher from "pusher-js";
-window.Pusher = Pusher;
 
 window.Echo = new Echo({
-    broadcaster: "reverb", // reverb or pusher would work
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? "https") === "https",
-    enabledTransports: ["ws", "wss"],
+    broadcaster: EchoCable,
+    cableOptions: {
+        url: url: import.meta.env.VITE_WEBSOCKET_URL || 'ws://localhost:8080/cable',
+    },
+    // other configuration options such as auth, etc
 });
-```
-
-Just make sure you point to to the AnyCable server (locally it runs on the same host and port as Reverb). You must also **configure AnyCable to use the same app key** as `VITE_REVERB_APP_KEY`:
-
-```sh
-anycable-go --pusher-app-key=my-app-key
-
-# or
-ANYCABLE_PUSHER_APP_KEY=my-app-key anycable-go
-```
-
-To use public channels, make sure you have enabled them in AnyCable:
-
-
-```sh
-anycable-go --public_streams
-
-# or full public mode
-anycable-go --public
-
-# or
-ANYCABLE_PUBLIC_STREAMS=true anycable-go
-
-# or
-ANYCABLE_PUBLIC=true anycable-go
 ```
 
 ## Usage
@@ -143,7 +109,7 @@ php artisan anycable:server -- --public_streams --pusher_app_key=my-app-key
 
 ### Private Channels
 
-AnyCable supports private channels. To use them, you need to set the `ANYCABLE_SECRET` environment variable.
+AnyCable supports private and presence channels. To use them, you need to set the `ANYCABLE_SECRET` environment variable.
 
 Then, don't forget to add authorization callbacks like this:
 
@@ -152,14 +118,6 @@ Broadcast::channel('private-channel', function ($user) {
     return true;
 });
 ```
-
-## Limitations
-
-- Presence channels are not supported yet.
-
-- Only HTTP broadcasting adapter for AnyCable is supported for now.
-
-- Pusher's signing functionality is not supported by AnyCable yet (is it used by Laravel at all?).
 
 ## Contributing
 
@@ -179,3 +137,5 @@ composer lint
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
+[@anycable/echo]: https://github.com/anycable/anycable-client/tree/master/packages/echo
