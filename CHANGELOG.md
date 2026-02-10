@@ -2,6 +2,8 @@
 
 ## master
 
+- Refactor server command: load server configuration from `config/broadcasting.php` first.
+
 ## 0.2.0
 
 - Refactor broadcaster to work with AnyCable Echo adapter (Reverb-compatible Echo adapters don't require a custom broadcaster anymore).

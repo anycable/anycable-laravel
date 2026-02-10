@@ -58,7 +58,6 @@ On the client-side, configure Echo to use AnyCable adapter:
 import Echo from "laravel-echo";
 import { EchoCable } from "@anycable/echo";
 
-
 window.Echo = new Echo({
     broadcaster: EchoCable,
     cableOptions: {
@@ -106,6 +105,31 @@ You can also pass AnyCable flags as follows:
 ```sh
 php artisan anycable:server -- --public_streams --pusher_app_key=my-app-key
 ```
+
+**IMPORTANT:** In containerized enviroments, we recommend using our official [Docker images](https://hub.docker.com/r/anycable/anycable-go/).
+
+#### Configuration
+
+You can use CLI options, env variables, or in the `config/broadcasting.php`. The latter is recommended to avoid potential issues with cached env (due to `php artisan config:cache`).
+
+Add a `server` key to your AnyCable broadcasting connection in `config/broadcasting.php`:
+
+```php
+'anycable' => [
+    'driver' => 'anycable',
+    // ...
+    'server' => [
+        'broadcast_adapter' => env('ANYCABLE_BROADCAST_ADAPTER', 'http'),
+        'presets' => env('ANYCABLE_PRESETS', 'broker'),
+        'public' => env('ANYCABLE_PUBLIC', false),
+        // Add any AnyCable server option here
+    ],
+],
+```
+
+Each key in the `server` array is automatically converted to an `ANYCABLE_*` environment variable and passed to the anycable-go binary (e.g., `'broadcast_adapter'` becomes `ANYCABLE_BROADCAST_ADAPTER`). See [AnyCable configuration docs](https://docs.anycable.io/anycable-go/configuration) for available options.
+
+The server command also recognizes Reverb env variables (such as `REVERB_APP_ID`, `REVERB_APP_KEY`, etc.) providing Pusher credentials. You can also provide AnyCable specific env vars to configure the Pusher compatibility feature for AnyCable: [docs](https://docs.anycable.io/anycable-go/pusher).
 
 ### Private Channels
 
