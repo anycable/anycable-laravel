@@ -2,6 +2,8 @@
 
 ## master
 
+## 0.3.0
+
 - Refactor server command: load server configuration from `config/broadcasting.php` first.
 
 ## 0.2.0
