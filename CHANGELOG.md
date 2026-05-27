@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.4.0
+
+- Relax deps to allow Laravel 13.
+
 ## 0.3.0
 
 - Refactor server command: load server configuration from `config/broadcasting.php` first.
